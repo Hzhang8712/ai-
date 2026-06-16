@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI上下游产业链资本市场现状与未来三年投资机会</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fdfae7;
+      --primary: #1e2bfa;
+      --text: #111111;
+      --text-muted: #5e5e5e;
+      --text-light: #8f8f8f;
+      --accent-light: rgba(30, 43, 250, 0.08);
+      --accent-medium: rgba(30, 43, 250, 0.15);
+      --border: rgba(30, 43, 250, 0.2);
+      --card-bg: rgba(30, 43, 250, 0.04);
+      --up: #059669;
+      --down: #dc2626;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 3.5vw 4vw 8.5vh 4vw;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(40px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+      z-index: 10;
+    }
+
+    .slide.prev { transform: translateX(-40px); }
+
+    h1, h2, h3, h4 {
+      font-family: "Space Grotesk", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    h1 { font-size: clamp(2.8rem, 5vw, 4.2rem); font-weight: 700; }
+    h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 1.5rem; }
+    h3 { font-size: clamp(1.1rem, 1.8vw, 1.5rem); font-weight: 500; line-height: 1.3; }
+    h4 {
+      font-size: clamp(0.85rem, 1.2vw, 1rem);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+    }
+
+    p, li {
+      font-size: clamp(0.85rem, 1.08vw, 1.02rem);
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2.5vh;
+      flex-shrink: 0;
+    }
+
+    .slide-header .tag {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--primary);
+      background: var(--accent-light);
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .nav-controls {
+      position: fixed;
+      bottom: 2.5vh;
+      right: 3vw;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      z-index: 100;
+    }
+
+    .nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      font-size: 1.1rem;
+    }
+
+    .nav-btn:hover {
+      background: var(--primary);
+      color: var(--bg);
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .slide-counter {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      position: fixed;
+      bottom: 2.5vh;
+      left: 3vw;
+      z-index: 100;
+    }
+
+    .keyboard-hint {
+      position: fixed;
+      bottom: 2.7vh;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.78rem;
+      color: var(--text-light);
+      z-index: 100;
+    }
+
+    .progress-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: var(--primary);
+      transition: width 0.4s ease;
+      z-index: 100;
+    }
+
+    .accent-line {
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .layout-cover {
+      justify-content: center;
+      align-items: flex-start;
+      padding-left: 8vw;
+    }
+
+    .layout-cover h1 {
+      max-width: 60vw;
+      margin-bottom: 1.5rem;
+      line-height: 1.05;
+    }
+
+    .layout-cover .subtitle {
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 46vw;
+      margin-bottom: 3rem;
+      font-weight: 400;
+    }
+
+    .layout-cover .meta {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      letter-spacing: 0.05em;
+    }
+
+    .layout-cover .cover-decoration {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 35vw;
+      height: 100vh;
+      background: var(--accent-light);
+      clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+
+    .layout-cover .cover-dots {
+      position: absolute;
+      bottom: 12vh;
+      right: 8vw;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      opacity: 0.25;
+    }
+
+    .layout-cover .cover-dots .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    .layout-agenda .agenda-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1rem 3rem;
+      margin-top: 1rem;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .agenda-item {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .agenda-num {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+      min-width: 36px;
+    }
+
+    .agenda-item h3 {
+      margin-bottom: 0.3rem;
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+    }
+
+    .agenda-item p {
+      font-size: clamp(0.8rem, 1vw, 0.95rem);
+      line-height: 1.5;
+    }
+
+    .layout-metrics .slide-content { justify-content: flex-start; }
+
+    .layout-metrics .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      align-items: stretch;
+    }
+
+    .metric-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      padding: 1.5rem 1.6rem;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--card-bg);
+    }
+
+    .metric-value {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .metric-label {
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .metric-desc {
+      font-size: clamp(0.78rem, 0.95vw, 0.9rem);
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .metric-supports {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin: 0.2rem 0 0;
+      padding: 0.7rem 0 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric-supports li {
+      font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+      color: var(--text-muted);
+      padding-left: 1rem;
+      position: relative;
+      line-height: 1.45;
+    }
+
+    .metric-supports li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--text-light);
+    }
+
+    .metric-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-top: 0.3rem;
+    }
+
+    .positive { color: var(--up); }
+    .negative { color: var(--down); }
+
+    .layout-dashboard .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    .stat-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1.4rem 1.5rem;
+      border-radius: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+    }
+
+    .stat-top {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .stat-num {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .stat-unit {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .stat-name {
+      font-size: clamp(0.85rem, 1vw, 0.95rem);
+      color: var(--text);
+      line-height: 1.35;
+      font-weight: 500;
+    }
+
+    .stat-context {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      line-height: 1.4;
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .layout-split .split-body {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 3.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .split-left, .split-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.3rem;
+    }
+
+    .split-right {
+      padding-left: 2.5rem;
+      border-left: 2px solid var(--border);
+    }
+
+    .insight-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.05rem;
+      margin: 0;
+      counter-reset: insight;
+    }
+
+    .insight-list li {
+      position: relative;
+      padding-left: 2.6rem;
+      font-size: clamp(0.88rem, 1.05vw, 1rem);
+      color: var(--text);
+      line-height: 1.55;
+      counter-increment: insight;
+    }
+
+    .insight-list li::before {
+      content: counter(insight, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .split-highlight {
+      padding: 1.4rem 1.5rem;
+      border-radius: 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .split-highlight cite {
+      display: block;
+      margin-top: 0.9rem;
+      color: var(--text-light);
+      font-style: normal;
+      font-size: 0.82rem;
+    }
+
+    .mini-stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+    }
+
+    .mini-stat {
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.25);
+    }
+
+    .mini-val {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .mini-label {
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+    }
+
+    .layout-bars .bars-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    .bar-item {
+      display: grid;
+      grid-template-columns: 21vw 1fr 4.5vw;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .bar-label {
+      font-size: 0.92rem;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--accent-light);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #6073ff);
+      border-radius: 999px;
+    }
+
+    .bar-pct {
+      text-align: right;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .layout-quote {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .quote-mark {
+      font-family: Georgia, serif;
+      font-size: 8rem;
+      line-height: 1;
+      color: var(--accent-medium);
+      margin-bottom: 1rem;
+    }
+
+    blockquote {
+      max-width: 62vw;
+      font-size: clamp(1.4rem, 2.3vw, 2rem);
+      line-height: 1.45;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .quote-source {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .quote-source strong { color: var(--primary); }
+
+    .quote-decoration,
+    .quote-decoration-2 {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--accent-light);
+      z-index: -1;
+    }
+
+    .quote-decoration {
+      width: 26vw;
+      height: 26vw;
+      left: 8vw;
+      top: 12vh;
+    }
+
+    .quote-decoration-2 {
+      width: 18vw;
+      height: 18vw;
+      right: 10vw;
+      bottom: 12vh;
+    }
+
+    .layout-timeline .timeline-track {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+      position: relative;
+    }
+
+    .timeline-step {
+      padding: 1.2rem 1rem 1rem;
+      border-radius: 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+    }
+
+    .step-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .step-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.45rem;
+    }
+
+    .step-desc {
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .layout-detail .detail-body {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .detail-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .detail-block {
+      padding: 1.2rem 1.3rem;
+      border-radius: 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+    }
+
+    .detail-block h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.7rem;
+      color: var(--text);
+    }
+
+    .detail-block ul {
+      padding-left: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .detail-block li {
+      font-size: 0.84rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .layout-closing {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .layout-closing h1 { margin-bottom: 1rem; }
+
+    .closing-sub {
+      max-width: 48vw;
+      margin-bottom: 2rem;
+      color: var(--text-muted);
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.9rem 1.4rem;
+      border-radius: 999px;
+      background: var(--primary);
+      color: var(--bg);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+    }
+
+    .closing-contact {
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    .closing-decoration,
+    .closing-decoration-2 {
+      position: absolute;
+      background: var(--accent-light);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    .closing-decoration {
+      width: 26vw;
+      height: 26vw;
+      left: 10vw;
+      top: 14vh;
+    }
+
+    .closing-decoration-2 {
+      width: 20vw;
+      height: 20vw;
+      right: 11vw;
+      bottom: 14vh;
+    }
+
+    @media (max-width: 1100px) {
+      .layout-agenda .agenda-grid,
+      .layout-metrics .metrics-row,
+      .layout-dashboard .stats-grid,
+      .layout-timeline .timeline-track,
+      .layout-detail .detail-body,
+      .mini-stat-row,
+      .layout-split .split-body {
+        grid-template-columns: 1fr;
+      }
+
+      .split-right { padding-left: 0; border-left: 0; }
+      .bar-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .layout-cover .subtitle,
+      .layout-cover h1,
+      blockquote,
+      .closing-sub { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="slide layout-cover active">
+      <div class="cover-decoration"></div>
+      <div class="cover-dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="accent-line"></div>
+      <h1>AI上下游产业链资本市场的现状与<br>未来三年投资机会</h1>
+      <p class="subtitle">从专业投资机构视角出发，聚焦 AI 大规模应用带来的需求跃升，比较其与互联网时代的相同与不同，并落到中国股票市场的投资框架、预期管理与风险控制。</p>
+      <p class="meta">2026年6月 · 中文商务版 · 适用于普通投资者交流</p>
+    </div>
+
+    <div class="slide layout-agenda">
+      <div class="slide-header">
+        <h4>目录</h4>
+        <span class="tag">10页主线</span>
+      </div>
+      <div class="slide-content">
+        <div class="accent-line"></div>
+        <div class="agenda-grid">
+          <div class="agenda-item">
+            <span class="agenda-num">01</span>
+            <div>
+              <h3>核心结论</h3>
+              <p>AI 是新一轮基础设施与生产力重构，不只是主题交易。</p>
+            </div>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-num">02</span>
+            <div>
+              <h3>全球产业链现状</h3>
+              <p>训练扩容之后，推理、网络、电力、液冷与数据中心同步放量。</p>
+            </div>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-num">03</span>
+            <div>
+              <h3>中国 AI 产业链映射</h3>
+              <p>从算力国产化到应用落地，A股与港股的受益顺序正在清晰化。</p>
+            </div>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-num">04</span>
+            <div>
+              <h3>与互联网时代对比</h3>
+              <p>同样是大浪潮，但资本开支、供给瓶颈和监管边界明显不同。</p>
+            </div>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-num">05</span>
+            <div>
+              <h3>未来3-5年投资机会</h3>
+              <p>重点看需求确定性、国产替代能力和盈利兑现节奏。</p>
+            </div>
+          </div>
+          <div class="agenda-item">
+            <span class="agenda-num">06</span>
+            <div>
+              <h3>中国股票市场建议</h3>
+              <p>坚持分层配置、控制估值透支与主题拥挤风险。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide layout-metrics">
+      <div class="slide-header">
+        <h4>核心结论</h4>
+        <span class="tag">投资判断</span>
+      </div>
+      <div class="slide-content">
+        <h2>这一轮 AI 投资最重要的不是“讲故事”，而是需求已经开始向整条产业链外溢</h2>
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-value">3层</div>
+            <div class="metric-label">投资主线从上游向中下游扩散</div>
+            <div class="metric-desc">最早由芯片与服务器受益，随后扩散到网络、电力、液冷、IDC，再向软件、行业应用和端侧设备延伸。</div>
+            <ul class="metric-supports">
+              <li>训练需求仍在，但推理需求开始成为第二增长曲线</li>
+              <li>AI 不再只消耗 GPU，也同步消耗带宽、电力和机柜</li>
+              <li>中国市场更应重视“卖铲子”和“卖水”的确定性</li>
+            </ul>
+            <div class="metric-change positive"><span>↑</span> 从单点景气走向链式景气</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">3年</div>
+            <div class="metric-label">未来三年仍是建设期大于兑现期</div>
+            <div class="metric-desc">2026-2028 年更像“基础设施铺设 + 企业流程改造”的窗口，真正大面积利润兑现会晚于市场最乐观预期。</div>
+            <ul class="metric-supports">
+              <li>资本市场会先交易基础设施，再交易应用渗透</li>
+              <li>应用层的爆款很多，但持续盈利模式还在筛选</li>
+              <li>估值扩张与业绩兑现之间会有多轮回撤</li>
+            </ul>
+            <div class="metric-change positive"><span>→</span> 机会很大，但节奏比想象更曲折</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">2类</div>
+            <div class="metric-label">中国股市优先配置“确定性”与“替代性”</div>
+            <div class="metric-desc">对普通投资者更友好的不是追最热概念，而是围绕基础设施高景气与国产替代能力做分层布局。</div>
+            <ul class="metric-supports">
+              <li>确定性：算力、IDC、电源、散热、光模块等</li>
+              <li>替代性：国产芯片、服务器、工业软件、数据库等</li>
+              <li>弹性仓位才配置应用、机器人、端侧AI等高波动方向</li>
+            </ul>
+            <div class="metric-change positive"><span>✓</span> 更适合中国股票市场的收益风险比</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide layout-dashboard">
+      <div class="slide-header">
+        <h4>全球产业链现状</h4>
+        <span class="tag">需求扩散</span>
+      </div>
+      <div class="slide-content">
+        <h2>全球 AI 投资已经从“模型竞赛”演变为“全栈基础设施竞赛”</h2>
+        <div class="stats-grid">
+          <div class="stat-cell">
+            <div class="stat-top">
+              <span class="stat-num">1</span>
+              <span class="stat-unit">条主线</span>
+            </div>
+            <div class="stat-name">训练扩容转向训练 + 推理双轮驱动</div>
+            <div class="stat-context">推理侧调用量上升，意味着长期需求不只属于少数超大模型训练中心。</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-top">
+              <span class="stat-num">4</span>
+              <span class="stat-unit">类瓶颈</span>
+            </div>
+            <div class="stat-name">芯片、网络、电力、散热成为同步约束</div>
+            <div class="stat-context">这决定了资本开支并不会只流向半导体，而会沿配套环节传导。</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-top">
+              <span class="stat-num">2</span>
+              <span class="stat-unit">类客户</span>
+            </div>
+            <div class="stat-name">互联网云厂商与政企客户同时加码</div>
+            <div class="stat-context">需求不再完全集中于少数海外科技巨头，企业 AI 改造开始形成第二层需求池。</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-top">
+              <span class="stat-num">3</span>
+              <span class="stat-unit">个阶段</span>
+            </div>
+            <div class="stat-name">先买算力，再买工具，最后买结果</div>
+            <div class="stat-context">产业成熟顺序通常是硬件、平台软件、行业应用，资本市场也大体按这个顺序定价。</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-top">
+              <span class="stat-num">N</span>
+              <span class="stat-unit">倍放大</span>
+            </div>
+            <div class="stat-name">每一次应用普及都会放大底层资源消耗</div>
+            <div class="stat-context">Agent、视频生成、企业知识库、自动编程都会增加推理频次和带宽消耗。</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-top">
+              <span class="stat-num">24</span>
+              <span class="stat-unit">个月</span>
+            </div>
+            <div class="stat-name">基础设施景气领先应用盈利兑现</div>
+            <div class="stat-context">这意味着短中期最稳的收益源仍然更靠上游，应用层机会更偏结构性。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide layout-split">
+      <div class="slide-header">
+        <h4>中国 AI 产业链</h4>
+        <span class="tag">A股/港股映射</span>
+      </div>
+      <div class="slide-content">
+        <h2>中国市场的机会并不在“完全复制美国”，而在于把全球需求映射到本土供给能力</h2>
+        <div class="split-body">
+          <div class="split-left">
+            <ul class="insight-list">
+              <li>上游看国产算力链，包括 AI 芯片、服务器、交换设备、PCB、光模块与先进封装配套，核心逻辑是需求增长叠加国产替代。</li>
+              <li>中游看 IDC、液冷、电源、UPS、柴油发电、变压器、配电设备，核心逻辑是 AI 机房密度上升带来的单机柜价值量抬升。</li>
+              <li>软件平台层看数据库、中间件、办公协同、工业软件和安全，核心逻辑是企业内部流程 AI 化带来的 IT 架构升级。</li>
+              <li>应用层看教育、医疗、金融、营销、客服、制造质检与机器人，但真正大面积盈利需要时间，不宜用短期流量替代长期利润。</li>
+              <li>港股更适合看平台公司与互联网龙头的 AI 重估，A股更适合抓设备、零部件和国产替代的景气链。</li>
+            </ul>
+          </div>
+          <div class="split-right">
+            <div class="split-highlight">
+              中国 AI 投资最关键的判断，不是“谁最会讲模型故事”，而是谁能在算力建设、企业落地和国产替代三个维度同时拿到订单。
+              <cite>投资框架：先看订单，次看毛利，最后看远期叙事</cite>
+            </div>
+            <div class="mini-stat-row">
+              <div class="mini-stat">
+                <div class="mini-val">A股</div>
+                <div class="mini-label">优先看设备、器件、配套基础设施</div>
+              </div>
+              <div class="mini-stat">
+                <div class="mini-val">港股</div>
+                <div class="mini-label">优先看平台流量、云资源和应用生态</div>
+              </div>
+              <div class="mini-stat">
+                <div class="mini-val">节奏</div>
+                <div class="mini-label">先交易建设，再交易渗透，最后交易利润</div>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; margin: 0;">
+              对普通投资者而言，越靠基础设施与配套环节，盈利验证通常越快；越靠最终应用，想象空间越大，但波动和证伪也更快。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide layout-bars">
+      <div class="slide-header">
+        <h4>未来3-5年机会</h4>
+        <span class="tag">中国股票市场优先级</span>
+      </div>
+      <div class="slide-content">
+        <h2>从投资胜率角度，当前更值得重点跟踪的中国市场方向</h2>
+        <div class="bars-container">
+          <div class="bar-item">
+            <div class="bar-label">算力基础设施：服务器、光模块、交换机、PCB</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 90%"></div></div>
+            <div class="bar-pct">90</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">IDC 与配套：液冷、电源、UPS、变压器、机房改造</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 84%"></div></div>
+            <div class="bar-pct">84</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">国产替代链：国产芯片、操作系统、数据库、工业软件</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 79%"></div></div>
+            <div class="bar-pct">79</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">行业应用：金融、办公、营销、客服、教育、医疗</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 67%"></div></div>
+            <div class="bar-pct">67</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">端侧 AI：手机、PC、眼镜、车载智能终端</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 61%"></div></div>
+            <div class="bar-pct">61</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">具身智能与机器人</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 56%"></div></div>
+            <div class="bar-pct">56</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">纯主题型概念股、缺订单验证的叙事标的</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 34%"></div></div>
+            <div class="bar-pct">34</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide layout-timeline">
+      <div class="slide-header">
+        <h4>与互联网时代对比</h4>
+        <span class="tag">相同与不同</span>
+      </div>
+      <div class="slide-content">
+        <h2>相同的是“平台级变革”，不同的是 AI 更像一场带有工业属性的数字革命</h2>
+        <div class="timeline-track">
+          <div class="timeline-step">
+            <div class="step-circle">同</div>
+            <div class="step-title">都是基础技术扩散</div>
+            <div class="step-desc">两者都会带来新的入口、新的商业模式和新的龙头公司，并改变行业利润分配。</div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-circle">异</div>
+            <div class="step-title">AI 更依赖重资产投入</div>
+            <div class="step-desc">互联网早期更依赖流量扩张，AI 则高度依赖芯片、机房、电力、网络和散热的同步建设。</div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-circle">异</div>
+            <div class="step-title">AI 供给约束更强</div>
+            <div class="step-desc">芯片先进制程、带宽和电力都可能成为瓶颈，这让产业链的定价权更集中到关键环节。</div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-circle">异</div>
+            <div class="step-title">监管与安全边界更早到来</div>
+            <div class="step-desc">AI 涉及数据、安全、内容合规和行业责任，商业化不会像移动互联网那样无限外延。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide layout-detail">
+      <div class="slide-header">
+        <h4>中国股票市场建议</h4>
+        <span class="tag">3-5年配置框架</span>
+      </div>
+      <div class="slide-content">
+        <h2>更适合普通投资者的做法，是把 AI 当成一组长期主线，而不是一次性主题投机</h2>
+        <div class="detail-body">
+          <div class="detail-col">
+            <div class="detail-block">
+              <h3>一层仓位：高确定性主线</h3>
+              <ul>
+                <li>围绕算力、IDC、液冷、电源、网络器件做核心配置</li>
+                <li>优先选择有订单、有产能、有利润兑现基础的公司</li>
+                <li>这是未来 2-3 年胜率最高的一层</li>
+              </ul>
+            </div>
+            <div class="detail-block">
+              <h3>二层仓位：国产替代与自主可控</h3>
+              <ul>
+                <li>关注国产芯片、服务器、数据库、工业软件和安全</li>
+                <li>逻辑来自政策支持 + 供应链重构 + 份额提升</li>
+                <li>估值可高一些，但必须跟踪产品迭代和客户验证</li>
+              </ul>
+            </div>
+            <div class="detail-block">
+              <h3>三层仓位：高弹性应用</h3>
+              <ul>
+                <li>教育、医疗、办公、营销、机器人、端侧 AI 更适合作为弹性仓位</li>
+                <li>收益可能更高，但证伪速度也更快</li>
+                <li>仓位控制比选赛道更重要</li>
+              </ul>
+            </div>
+          </div>
+          <div class="detail-col">
+            <div class="detail-block">
+              <h3>预期管理</h3>
+              <ul>
+                <li>不要把 3-5 年逻辑压缩成 3-5 个月的股价预期</li>
+                <li>产业趋势向上，不代表每个阶段都适合追高</li>
+                <li>需要接受板块轮动、回撤和估值消化是常态</li>
+              </ul>
+            </div>
+            <div class="detail-block">
+              <h3>重点风险</h3>
+              <ul>
+                <li>海外算力周期波动向国内产业链传导</li>
+                <li>应用商业化低于预期，市场情绪先于基本面回落</li>
+                <li>技术迭代太快，旧产品路线和产能可能被淘汰</li>
+              </ul>
+            </div>
+            <div class="detail-block">
+              <h3>执行原则</h3>
+              <ul>
+                <li>看订单、看现金流、看毛利率改善，而不只看概念热度</li>
+                <li>分批布局，避免单一高估值方向过度集中</li>
+                <li>把 AI 当作组合中的长期进攻资产，而不是全部资产</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide layout-metrics">
+      <div class="slide-header">
+        <h4>未来三年路线图</h4>
+        <span class="tag">2026-2028</span>
+      </div>
+      <div class="slide-content">
+        <h2>未来三年，中国市场大概率会依次交易这三个阶段</h2>
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-value">2026</div>
+            <div class="metric-label">算力与基础设施继续扩张</div>
+            <div class="metric-desc">主逻辑是建设需求外溢，设备与配套链条景气度维持高位，市场更重视订单与交付能力。</div>
+            <ul class="metric-supports">
+              <li>机房、液冷、电力、网络器件受益更直接</li>
+              <li>国产替代链继续获得估值溢价</li>
+              <li>应用层更多是主题轮动而非全面兑现</li>
+            </ul>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">2027</div>
+            <div class="metric-label">企业 AI 改造进入可见收入期</div>
+            <div class="metric-desc">办公协同、金融科技、工业软件、营销客服等开始出现更可跟踪的付费和续费指标。</div>
+            <ul class="metric-supports">
+              <li>平台软件与行业应用有望逐步接棒</li>
+              <li>市场会开始区分“有调用量”和“有利润”</li>
+              <li>龙头公司强者恒强特征更明显</li>
+            </ul>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">2028</div>
+            <div class="metric-label">应用分化，盈利模式胜出</div>
+            <div class="metric-desc">真正有壁垒的应用与端侧生态有望走出来，但缺乏商业闭环的公司可能显著掉队。</div>
+            <ul class="metric-supports">
+              <li>行业会从拼叙事转向拼现金流和市场份额</li>
+              <li>资本市场的超额收益更多来自精选个股</li>
+              <li>估值回归后反而更适合中长期布局</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide layout-closing">
+      <div class="closing-decoration"></div>
+      <div class="closing-decoration-2"></div>
+      <div class="accent-line" style="margin: 0 auto 1.5rem;"></div>
+      <h1>结论与提醒</h1>
+      <p class="closing-sub">把握 AI 大时代机会的关键，不是押注最热概念，而是围绕确定性需求、国产替代能力和盈利兑现节奏做长期配置。对普通投资者来说，机会很大，但预期必须更稳，仓位必须更有纪律。</p>
+      <a href="#" class="cta-btn">仅供交流，不构成个股推荐</a>
+      <p class="closing-contact">建议关注：景气度验证 · 估值消化 · 风险分散 · 中长期视角</p>
+    </div>
+  </div>
+
+  <div class="slide-counter"><span id="current">1</span> / <span id="total">10</span></div>
+  <div class="keyboard-hint">使用键盘左右方向键切换</div>
+  <div class="progress-bar" id="progress"></div>
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" aria-label="上一页">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" aria-label="下一页">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll(".slide");
+    const currentEl = document.getElementById("current");
+    const totalEl = document.getElementById("total");
+    const progressEl = document.getElementById("progress");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    let current = 0;
+    const total = slides.length;
+    totalEl.textContent = total;
+
+    function updateSlide() {
+      slides.forEach((slide, i) => {
+        slide.classList.remove("active", "prev");
+        if (i === current) {
+          slide.classList.add("active");
+        } else if (i < current) {
+          slide.classList.add("prev");
+        }
+      });
+
+      currentEl.textContent = current + 1;
+      progressEl.style.width = `${((current + 1) / total) * 100}%`;
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+    }
+
+    function changeSlide(direction) {
+      const next = current + direction;
+      if (next >= 0 && next < total) {
+        current = next;
+        updateSlide();
+      }
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "PageDown") changeSlide(1);
+      if (e.key === "ArrowLeft" || e.key === "PageUp") changeSlide(-1);
+    });
+
+    updateSlide();
+  </script>
+</body>
+</html>
